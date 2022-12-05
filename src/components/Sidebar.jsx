@@ -1,9 +1,49 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import { MdHomeFilled, MdSearch } from "react-icons/md";
 import { IoLibrary } from "react-icons/io5";
 import Playlists from "./Playlists";
+import {useStateProvider} from "../utils/StateProvider";
+import axios from "axios";
+import {reducerCases} from "../utils/Constants";
+
 export default function Sidebar() {
+  const [{ defaultPlaylists }, setDefaultPlaylists] = useStateProvider();
+  useEffect(() => {
+    const getDefaultPlaylist = async () => {
+      const response = await axios.get(
+        "http://localhost:8080/playlistAll",
+        {headers: {"Content-Type": "application/json",},}
+      );
+      const items = response.data.data;
+      const defaultPlaylists = items.map(({ id, name, image }) => {
+        return { id, name, image };
+      });
+      setDefaultPlaylists({ type: reducerCases.SET_DEFAULT_PLAYLIST, defaultPlaylists });
+    };
+    getDefaultPlaylist();
+  }, [defaultPlaylists, setDefaultPlaylists]);
+  // useEffect(() => {
+  //   const getDefaultPlaylist = async () => {
+  //     const response = await axios.get(
+  //       "http://localhost:8080/playlistAll",
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     console.log("response.data.data", response.data.data)
+  //     const items = response.data.data;
+  //     console.log("items", items)
+  //     const defaultPlaylists = items.map(({ id, name, image }) => {
+  //       return { id, name, image };
+  //     });
+  //     dispatch({ type: reducerCases.SET_DEFAULT_PLAYLIST, defaultPlaylists });
+  //   };
+  //   getDefaultPlaylist();
+  // }, [defaultPlaylists, dispatch]);
+  console.log("defaultPlaylists", defaultPlaylists)
   return (
     <Container>
       <div className="top__links">
@@ -14,18 +54,12 @@ export default function Sidebar() {
           />
         </div>
         <ul>
-          <li>
-            <MdHomeFilled />
-            <span>Home</span>
-          </li>
-          <li>
-            <MdSearch />
-            <span>Search</span>
-          </li>
-          <li>
-            <IoLibrary />
-            <span>Your Library</span>
-          </li>
+          {
+            defaultPlaylists && defaultPlaylists.map(
+              ({ id, name, image }) => {
+                return (<li >{name}</li>);
+              })
+          }
         </ul>
       </div>
       <Playlists />
@@ -33,7 +67,7 @@ export default function Sidebar() {
   );
 }
 
-const Container = styled.div`
+const Container = styled.div` 
   background-color: black;
   color: #b3b3b3;
   display: flex;
