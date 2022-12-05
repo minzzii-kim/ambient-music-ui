@@ -1,49 +1,30 @@
 import React, {useEffect} from "react";
 import styled from "styled-components";
-import { MdHomeFilled, MdSearch } from "react-icons/md";
-import { IoLibrary } from "react-icons/io5";
 import Playlists from "./Playlists";
 import {useStateProvider} from "../utils/StateProvider";
 import axios from "axios";
 import {reducerCases} from "../utils/Constants";
 
 export default function Sidebar() {
-  const [{ defaultPlaylists }, setDefaultPlaylists] = useStateProvider();
+  const [{ defaultPlaylists }, dispatch] = useStateProvider();
   useEffect(() => {
     const getDefaultPlaylist = async () => {
       const response = await axios.get(
         "http://localhost:8080/playlistAll",
-        {headers: {"Content-Type": "application/json",},}
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
-      const items = response.data.data;
-      const defaultPlaylists = items.map(({ id, name, image }) => {
-        return { id, name, image };
-      });
-      setDefaultPlaylists({ type: reducerCases.SET_DEFAULT_PLAYLIST, defaultPlaylists });
+        const defaultPlaylists = response.data.data;
+      dispatch({ type: reducerCases.SET_DEFAULT_PLAYLIST, defaultPlaylists });
     };
     getDefaultPlaylist();
-  }, [defaultPlaylists, setDefaultPlaylists]);
-  // useEffect(() => {
-  //   const getDefaultPlaylist = async () => {
-  //     const response = await axios.get(
-  //       "http://localhost:8080/playlistAll",
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     console.log("response.data.data", response.data.data)
-  //     const items = response.data.data;
-  //     console.log("items", items)
-  //     const defaultPlaylists = items.map(({ id, name, image }) => {
-  //       return { id, name, image };
-  //     });
-  //     dispatch({ type: reducerCases.SET_DEFAULT_PLAYLIST, defaultPlaylists });
-  //   };
-  //   getDefaultPlaylist();
-  // }, [defaultPlaylists, dispatch]);
-  console.log("defaultPlaylists", defaultPlaylists)
+  }, [dispatch]);
+  const changeCurrentPlaylist = (selectedPlaylistId) => {
+    dispatch({ type: reducerCases.SET_PLAYLIST_ID, selectedPlaylistId });
+  };
   return (
     <Container>
       <div className="top__links">
@@ -55,10 +36,16 @@ export default function Sidebar() {
         </div>
         <ul>
           {
-            defaultPlaylists && defaultPlaylists.map(
-              ({ id, name, image }) => {
-                return (<li >{name}</li>);
-              })
+                defaultPlaylists && defaultPlaylists.map(
+                    ( ply ) => {
+                      return (
+                          <li
+                            key={ ply["playlist_id"] }
+                            onClick={ () => {changeCurrentPlaylist(ply["playlist_id"])}}>>
+                          <span style={{color: 'white'}}>{ply["playlist_name"]}</span>
+                          </li>);
+                    }
+              )
           }
         </ul>
       </div>
