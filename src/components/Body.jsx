@@ -7,7 +7,7 @@ import { reducerCases } from "../utils/Constants";
 export default function Body({ headerBackground }) {
   const [{ token, selectedPlaylist, selectedPlaylistId }, dispatch] =
     useStateProvider();
-  console.log("body token", token);
+
   useEffect(() => {
     const getInitialPlaylist = async () => {
       if (!token) {
@@ -53,7 +53,11 @@ export default function Body({ headerBackground }) {
     context_uri,
     track_number
   ) => {
-    console.log("playtrack token", token);
+    await axios.put("http://localhost:8080/start/" + id, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     const response = await axios.put(
       `https://api.spotify.com/v1/me/player/play`,
       {
