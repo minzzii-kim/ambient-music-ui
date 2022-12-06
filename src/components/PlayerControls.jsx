@@ -9,12 +9,16 @@ import { CgPlayTrackNext, CgPlayTrackPrev } from "react-icons/cg";
 import { FiRepeat } from "react-icons/fi";
 import { useStateProvider } from "../utils/StateProvider";
 import axios from "axios";
-import { reducerCases } from "../utils/Constants";
+import config, { reducerCases } from "../utils/Constants";
 export default function PlayerControls() {
   const [{ token, playerState }, dispatch] = useStateProvider();
 
   const changeState = async () => {
     const state = playerState ? "pause" : "play";
+    console.log("change state : ", state);
+    if (state === "pause") {
+      await axios.put(`${config.ENDPOINT_URI}/pause/1`);
+    }
     await axios.put(
       `https://api.spotify.com/v1/me/player/${state}`,
       {},

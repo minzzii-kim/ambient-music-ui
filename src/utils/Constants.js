@@ -11,4 +11,5 @@ export const reducerCases = {
 export default {
   CLIENT_ID: process.env.REACT_APP_CLIENT_ID,
   REDIRECT_URI: process.env.REACT_APP_REDIRECT_URI,
+  ENDPOINT_URI: "http://localhost:8080",
 };

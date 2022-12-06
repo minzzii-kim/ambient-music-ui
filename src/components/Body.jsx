@@ -1,12 +1,13 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useStateProvider } from "../utils/StateProvider";
 import { AiFillClockCircle } from "react-icons/ai";
-import { reducerCases } from "../utils/Constants";
+import config, { reducerCases } from "../utils/Constants";
 export default function Body({ headerBackground }) {
   const [{ token, selectedPlaylist, selectedPlaylistId }, dispatch] =
     useStateProvider();
+  const [playingState, setPlayingState] = useState("play");
 
   useEffect(() => {
     const getInitialPlaylist = async () => {
@@ -53,38 +54,61 @@ export default function Body({ headerBackground }) {
     context_uri,
     track_number
   ) => {
-    await axios.put("http://localhost:8080/start/" + id, {
+    console.log(`play id :${id}, name: ${name} playingState: ${playingState}`);
+    const pauseHandler = async () => {
+      await axios.put(
+        `https://api.spotify.com/v1/me/player/${playingState}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+    };
+    const playHandler = async () => {
+      const response = await axios.put(
+        `https://api.spotify.com/v1/me/player/${playingState}`,
+        {
+          context_uri,
+          offset: {
+            position: track_number - 1,
+          },
+          position_ms: 0,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.status === 204) {
+        const currentPlaying = {
+          id,
+          name,
+          artists,
+          image,
+        };
+        dispatch({ type: reducerCases.SET_PLAYING, currentPlaying });
+        dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+      } else {
+        dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+      }
+    };
+    await axios.put(`${config.ENDPOINT_URI}/${playingState}/${id}`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    const response = await axios.put(
-      `https://api.spotify.com/v1/me/player/play`,
-      {
-        context_uri,
-        offset: {
-          position: track_number - 1,
-        },
-        position_ms: 0,
-      },
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    if (response.status === 204) {
-      const currentPlaying = {
-        id,
-        name,
-        artists,
-        image,
-      };
-      dispatch({ type: reducerCases.SET_PLAYING, currentPlaying });
-      dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+
+    if (playingState === "pause" || !playingState) {
+      pauseHandler();
+      setPlayingState("play");
     } else {
-      dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+      playHandler();
+      setPlayingState("pause");
     }
   };
   const msToMinutesAndSeconds = (ms) => {
