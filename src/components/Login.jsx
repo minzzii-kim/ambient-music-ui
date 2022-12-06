@@ -23,10 +23,14 @@ export default function Login() {
   return (
     <Container>
       <img
-        src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_RGB_Black.png"
-        alt="spotify"
+        src="https://i.ibb.co/K29CfXj/Ambient-Music-1.png"
+        alt="Ambient-Music"
       />
-      <button onClick={handleClick}>Connect Spotify</button>
+      <button onClick={handleClick}>
+        <span style={{color: 'black'}}><b>Being Ambient</b></span>
+      </button>
+      <span>김도연 김민지 김진필 김수현<br/>
+        김현지 남호승 허운해</span>
     </Container>
   );
 }
@@ -38,7 +42,8 @@ const Container = styled.div`
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background-color: #1db954;
+  background-image: url('https://www.10wallpaper.com/wallpaper/1366x768/1701/Sky_space_milky_stars-Space_High_Quality_Wallpaper_1366x768.jpg');
+  background-size: cover;
   gap: 5rem;
   img {
     height: 20vh;
@@ -46,10 +51,13 @@ const Container = styled.div`
   button {
     padding: 1rem 5rem;
     border-radius: 5rem;
-    background-color: black;
+    background-color: white;
     color: #49f585;
     border: none;
     font-size: 1.4rem;
     cursor: pointer;
+  }  
+  span {
+    color: white
   }
 `;
