@@ -49,6 +49,14 @@ export default function Body({ headerBackground }) {
     context_uri,
     track_number
   ) => {
+    await axios.put(
+        "http://localhost:8080/start/" + id,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+        )
     const response = await axios.put(
       `https://api.spotify.com/v1/me/player/play`,
       {
