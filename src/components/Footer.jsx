@@ -9,7 +9,7 @@ export default function Footer() {
     <Container>
       <CurrentTrack />
       <PlayerControls />
-      <Volume />
+      {/*<Volume />*/}
     </Container>
   );
 }
