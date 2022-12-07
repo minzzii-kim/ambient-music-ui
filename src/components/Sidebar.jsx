@@ -1,9 +1,30 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
-import { MdHomeFilled, MdSearch } from "react-icons/md";
-import { IoLibrary } from "react-icons/io5";
 import Playlists from "./Playlists";
+import {useStateProvider} from "../utils/StateProvider";
+import axios from "axios";
+import {reducerCases} from "../utils/Constants";
+
 export default function Sidebar() {
+  const [{ defaultPlaylists }, dispatch] = useStateProvider();
+  useEffect(() => {
+    const getDefaultPlaylist = async () => {
+      const response = await axios.get(
+        "http://localhost:8080/playlistAll",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+        const defaultPlaylists = response.data.data;
+      dispatch({ type: reducerCases.SET_DEFAULT_PLAYLIST, defaultPlaylists });
+    };
+    getDefaultPlaylist();
+  }, [dispatch]);
+  const changeCurrentPlaylist = (selectedPlaylistId) => {
+    dispatch({ type: reducerCases.SET_PLAYLIST_ID, selectedPlaylistId });
+  };
   return (
     <Container>
       <div className="top__links">
@@ -14,18 +35,18 @@ export default function Sidebar() {
           />
         </div>
         <ul>
-          <li>
-            <MdHomeFilled />
-            <span>Home</span>
-          </li>
-          <li>
-            <MdSearch />
-            <span>Search</span>
-          </li>
-          <li>
-            <IoLibrary />
-            <span>Your Library</span>
-          </li>
+          {
+                defaultPlaylists && defaultPlaylists.map(
+                    ( ply ) => {
+                      return (
+                          <li
+                            key={ ply["playlist_id"] }
+                            onClick={ () => {changeCurrentPlaylist(ply["playlist_id"])}}>>
+                          <span style={{color: 'white'}}>{ply["playlist_name"]}</span>
+                          </li>);
+                    }
+              )
+          }
         </ul>
       </div>
       <Playlists />
@@ -33,7 +54,7 @@ export default function Sidebar() {
   );
 }
 
-const Container = styled.div`
+const Container = styled.div` 
   background-color: black;
   color: #b3b3b3;
   display: flex;
