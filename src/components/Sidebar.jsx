@@ -1,23 +1,29 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Playlists from "./Playlists";
-import {useStateProvider} from "../utils/StateProvider";
+import { useStateProvider } from "../utils/StateProvider";
 import axios from "axios";
-import {reducerCases} from "../utils/Constants";
+import config, { reducerCases } from "../utils/Constants";
 
 export default function Sidebar() {
   const [{ defaultPlaylists }, dispatch] = useStateProvider();
+  const testPhotoService = async () => {
+    window.location.href =
+      "https://i.scdn.co/image/ab67706f00000003e8e28219724c2423afa4d320";
+    await axios.put(`${config.ENDPOINT_URI}/photo/play`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
   useEffect(() => {
     const getDefaultPlaylist = async () => {
-      const response = await axios.get(
-        "http://localhost:8080/playlistAll",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-        const defaultPlaylists = response.data.data;
+      const response = await axios.get("http://localhost:8080/playlistAll", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const defaultPlaylists = response.data.data;
       dispatch({ type: reducerCases.SET_DEFAULT_PLAYLIST, defaultPlaylists });
     };
     getDefaultPlaylist();
@@ -35,18 +41,28 @@ export default function Sidebar() {
           />
         </div>
         <ul>
-          {
-                defaultPlaylists && defaultPlaylists.map(
-                    ( ply ) => {
-                      return (
-                          <li
-                            key={ ply["playlist_id"] }
-                            onClick={ () => {changeCurrentPlaylist(ply["playlist_id"])}}>>
-                          <span style={{color: 'white'}}>{ply["playlist_name"]}</span>
-                          </li>);
-                    }
-              )
-          }
+          {defaultPlaylists &&
+            defaultPlaylists.map((ply) => {
+              return (
+                <li
+                  key={ply["playlist_id"]}
+                  onClick={() => {
+                    changeCurrentPlaylist(ply["playlist_id"]);
+                  }}
+                >
+                  <span style={{ color: "white" }}>{ply["playlist_name"]}</span>
+                </li>
+              );
+            })}
+
+          <li
+            key="photoServiceTrack"
+            onClick={() => {
+              testPhotoService();
+            }}
+          >
+            <span style={{ color: "white" }}>Photo Service</span>
+          </li>
         </ul>
       </div>
       <Playlists />
@@ -54,7 +70,7 @@ export default function Sidebar() {
   );
 }
 
-const Container = styled.div` 
+const Container = styled.div`
   background-color: black;
   color: #b3b3b3;
   display: flex;
