@@ -55,14 +55,14 @@ export default function Sidebar() {
               );
             })}
 
-          <li
-            key="photoServiceTrack"
-            onClick={() => {
-              testPhotoService();
-            }}
-          >
-            <span style={{ color: "white" }}>Photo Service</span>
-          </li>
+          {/*<li*/}
+          {/*  key="photoServiceTrack"*/}
+          {/*  onClick={() => {*/}
+          {/*    testPhotoService();*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  <span style={{ color: "white" }}>Photo Service</span>*/}
+          {/*</li>*/}
         </ul>
       </div>
       <Playlists />
