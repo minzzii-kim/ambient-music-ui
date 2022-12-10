@@ -24,6 +24,19 @@ export default function Body({ headerBackground }) {
           },
         }
       );
+      const responseApi = await axios.get(
+          `${config.ENDPOINT_URI}/playlist/${selectedPlaylistId}`,
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      const storedTracks = responseApi.data.data.map(track => track.song_id)
+      const filteredTracks = response.data.tracks.items.filter(
+          song => storedTracks.includes(song.track.id)
+      )
       const selectedPlaylist = {
         id: response.data.id,
         name: response.data.name,
@@ -31,7 +44,7 @@ export default function Body({ headerBackground }) {
           ? ""
           : response.data.description,
         image: response.data.images[0].url,
-        tracks: response.data.tracks.items.map(({ track }) => ({
+        tracks: filteredTracks.map(({ track }) => ({
           id: track.id,
           name: track.name,
           artists: track.artists.map((artist) => artist.name),
