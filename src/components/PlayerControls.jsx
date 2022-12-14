@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   BsFillPlayCircleFill,
   BsFillPauseCircleFill,
   BsShuffle,
+  BsLightbulb,
+  BsLightbulbOff,
 } from "react-icons/bs";
 import { CgPlayTrackNext, CgPlayTrackPrev } from "react-icons/cg";
 import { FiRepeat } from "react-icons/fi";
@@ -12,7 +14,29 @@ import axios from "axios";
 import config, { reducerCases } from "../utils/Constants";
 export default function PlayerControls() {
   const [{ token, playerState }, dispatch] = useStateProvider();
-
+  const [light1, setLightState1] = useState("on");
+  const [light2, setLightState2] = useState("off");
+  const selectLight1 = async () => {
+    light1 === "on" ? setLightState1("off") : setLightState1("on");
+    console.log("light1 : ", light1);
+  };
+  const selectLight2 = async () => {
+    light2 == "on" ? setLightState2("off") : setLightState2("on");
+    console.log("light2 : ", light2);
+    if (light2 === "off") {
+      await axios.put(`${config.ENDPOINT_URI}/lights/2`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } else {
+      await axios.put(`${config.ENDPOINT_URI}/lights/1`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+  };
   const changeState = async () => {
     const state = playerState ? "pause" : "play";
     console.log("change state : ", state);
@@ -69,6 +93,20 @@ export default function PlayerControls() {
   };
   return (
     <Container>
+      <div className="light1">
+        {light1 === "on" ? (
+          <BsLightbulb onClick={selectLight1} />
+        ) : (
+          <BsLightbulbOff onClick={selectLight1} />
+        )}
+      </div>
+      <div className="light2">
+        {light2 === "on" ? (
+          <BsLightbulb onClick={selectLight2} />
+        ) : (
+          <BsLightbulbOff onClick={selectLight2} />
+        )}
+      </div>
       <div className="shuffle">
         <BsShuffle />
       </div>

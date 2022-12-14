@@ -11,6 +11,10 @@ export const reducerCases = {
 
 export default {
   CLIENT_ID: process.env.REACT_APP_CLIENT_ID,
+  CLIENT_SECRET: process.env.REACT_APP_CLIENT_SCRET,
   REDIRECT_URI: process.env.REACT_APP_REDIRECT_URI,
-  ENDPOINT_URI: "http://localhost:8080",
+  PLAYER_ID: process.env.REACT_APP_PLAYER_ID,
+  ENDPOINT_URI: "http://localhost:8080", //7d15-125-248-25-49.jp.ngrok.io",
+  LIGHT1: "0b4a112c-feb0-4457-afba-3c859b9f70ad",
+  LIGHT2: "a800f06f-f1aa-4014-8b21-9b72ec129062",
 };

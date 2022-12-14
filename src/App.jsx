@@ -3,6 +3,8 @@ import Login from "./components/Login";
 import Spotify from "./components/Spotify";
 import { reducerCases } from "./utils/Constants";
 import { useStateProvider } from "./utils/StateProvider";
+import config from "./utils/Constants";
+
 export default function App() {
   const [{ token }, dispatch] = useStateProvider();
   useEffect(() => {

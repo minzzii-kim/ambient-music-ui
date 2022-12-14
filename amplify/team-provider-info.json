@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-ambientmusicui-dev-135800-authRole",
+      "UnauthRoleArn": "arn:aws:iam::912628684947:role/amplify-ambientmusicui-dev-135800-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::912628684947:role/amplify-ambientmusicui-dev-135800-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-ambientmusicui-dev-135800-deployment",
+      "UnauthRoleName": "amplify-ambientmusicui-dev-135800-unauthRole",
+      "StackName": "amplify-ambientmusicui-dev-135800",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:912628684947:stack/amplify-ambientmusicui-dev-135800/633fb2f0-7910-11ed-bfe4-0a84de4da66c",
+      "AmplifyAppId": "d3w1xemj9xqz3v"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d3w1xemj9xqz3v",
+          "type": "manual"
+        }
+      }
+    }
+  }
+}

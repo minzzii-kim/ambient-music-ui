@@ -25,18 +25,19 @@ export default function Body({ headerBackground }) {
         }
       );
       const responseApi = await axios.get(
-          `${config.ENDPOINT_URI}/playlist/${selectedPlaylistId}`,
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-      const storedTracks = responseApi.data.data.map(track => track.song_id)
-      const filteredTracks = response.data.tracks.items.filter(
-          song => storedTracks.includes(song.track.id)
-      )
+        `${config.ENDPOINT_URI}/playlist/${selectedPlaylistId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+            //withCredentials: true,
+          },
+        }
+      );
+      const storedTracks = responseApi.data.data.map((track) => track.song_id);
+      const filteredTracks = response.data.tracks.items.filter((song) =>
+        storedTracks.includes(song.track.id)
+      );
       const selectedPlaylist = {
         id: response.data.id,
         name: response.data.name,
@@ -70,7 +71,7 @@ export default function Body({ headerBackground }) {
     console.log(`play id :${id}, name: ${name} playingState: ${playingState}`);
     const pauseHandler = async () => {
       await axios.put(
-        `https://api.spotify.com/v1/me/player/${playingState}`,
+        `https://api.spotify.com/v1/me/player/${playingState}?device_id=${config.PLAYER_ID}`,
         {},
         {
           headers: {
@@ -82,7 +83,7 @@ export default function Body({ headerBackground }) {
     };
     const playHandler = async () => {
       const response = await axios.put(
-        `https://api.spotify.com/v1/me/player/${playingState}`,
+        `https://api.spotify.com/v1/me/player/${playingState}?device_id=${config.PLAYER_ID}`,
         {
           context_uri,
           offset: {

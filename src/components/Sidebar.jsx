@@ -18,7 +18,7 @@ export default function Sidebar() {
   };
   useEffect(() => {
     const getDefaultPlaylist = async () => {
-      const response = await axios.get("http://localhost:8080/playlistAll", {
+      const response = await axios.get(`${config.ENDPOINT_URI}/playlistAll`, {
         headers: {
           "Content-Type": "application/json",
         },
