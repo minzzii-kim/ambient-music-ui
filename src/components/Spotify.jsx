@@ -21,6 +21,7 @@ export default function Spotify() {
       ? setHeaderBackground(true)
       : setHeaderBackground(false);
   };
+
   useEffect(() => {
     const getUserInfo = async () => {
       const { data } = await axios.get("https://api.spotify.com/v1/me", {
